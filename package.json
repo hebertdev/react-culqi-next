@@ -1,0 +1,68 @@
+{
+  "name": "react-culqi-next",
+  "description": "A React library for integration with the Culqi payment processor, compatible with Next.js",
+  "version": "0.1.0",
+  "license": "MIT",
+  "contributors": [
+    "Hebert Villafuerte (https://github.com/hebertdev/)"
+  ],
+  "author": "hebertdev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hebertdev/react-culqi-next"
+  },
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test --passWithNoTests",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why"
+  },
+  "peerDependencies": {
+    "react": ">=16"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "module": "dist/react-culqi-next.esm.js",
+  "size-limit": [
+    {
+      "path": "dist/react-culqi-next.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/react-culqi-next.esm.js",
+      "limit": "10 KB"
+    }
+  ],
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^8.2.4",
+    "@types/react": "^18.2.12",
+    "@types/react-dom": "^18.2.5",
+    "husky": "^8.0.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "size-limit": "^8.2.4",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.5.3",
+    "typescript": "^3.9.10"
+  }
+}
