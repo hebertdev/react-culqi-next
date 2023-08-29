@@ -10,16 +10,19 @@ export interface UseCulqiPropsV4 {
 }
 
 type Currency = "PEN";
+type Lang = "auto" | "es" | "en"
 
 export interface SettingsV4 {
   title: string;
   currency: Currency;
   amount: number;
   options?: Partial<Options>;
+  xculqirsaid?:String;
+  rsapublickey?:String;
 }
 
 export interface Options {
-  lang: string;
+  lang: Lang;
   installments: boolean;
   paymentMethods?: Partial<PaymentMethods>;
   style?: Partial<Style>;

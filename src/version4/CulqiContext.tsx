@@ -6,7 +6,6 @@ export const CulqiContext = createContext<CulqiContextProps>({
 });
 
 export const baseCulqiUrl = "https://checkout.culqi.com";
-const culqiId = "culqi-js";
 const culqiUrl = `${baseCulqiUrl}/js/v4`;
 
 interface CulqiProviderProps {
@@ -27,7 +26,6 @@ export const CulqiProvider = ({
   useEffect(() => {
     if (!publicKey) return;
     const script = document.createElement("script");
-    script.id = culqiId;
     script.src = culqiUrl;
     script.async = true;
 

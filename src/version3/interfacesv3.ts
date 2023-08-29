@@ -10,6 +10,7 @@ export interface UseCulqiPropsV3 {
 }
 
 type Currency = "PEN";
+type Lang = "auto" | "es" | "en"
 
 export interface SettingsV3 {
   title: string;
@@ -20,7 +21,7 @@ export interface SettingsV3 {
 }
 
 export interface Options {
-  lang: string;
+  lang: Lang;
   modal: boolean;
   installments: boolean;
   customButton: string;

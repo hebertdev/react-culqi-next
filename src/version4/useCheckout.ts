@@ -7,8 +7,6 @@ import type {
   UseCulqiPropsV4
 } from "./interfacesv4";
 
-
-
 export const useCheckout = ({
   settings,
   onToken,
