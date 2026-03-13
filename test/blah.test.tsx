@@ -1,19 +1,13 @@
 import {
   CulqiProvider,
-  CulqiProviderV3,
   useCheckout,
-  useCheckoutV3,
+  CulqiProviderCustom,
+  useCheckoutCustom,
 } from '../src';
 
 describe('CulqiProvider import', () => {
   it('imports CulqiProvider correctly', () => {
     expect(typeof CulqiProvider).toBe('function');
-  });
-});
-
-describe('CulqiProviderV3 import', () => {
-  it('imports CulqiProviderV3 correctly', () => {
-    expect(typeof CulqiProviderV3).toBe('function');
   });
 });
 
@@ -23,8 +17,14 @@ describe('useCheckout import', () => {
   });
 });
 
-describe('useCheckoutV3 import', () => {
-  it('imports useCheckoutV3 correctly', () => {
-    expect(typeof useCheckoutV3).toBe('function');
+describe('CulqiProviderCustom import', () => {
+  it('imports CulqiProviderCustom correctly', () => {
+    expect(typeof CulqiProviderCustom).toBe('function');
+  });
+});
+
+describe('useCheckoutCustom import', () => {
+  it('imports useCheckoutCustom correctly', () => {
+    expect(typeof useCheckoutCustom).toBe('function');
   });
 });

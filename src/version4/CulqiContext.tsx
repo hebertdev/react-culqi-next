@@ -1,11 +1,12 @@
-import React, { createContext, useState, useEffect, ReactNode } from "react";
-import type { CulqiContextProps } from "./interfacesv4";
+import { createContext, useState, useEffect, ReactNode } from 'react';
+import type { CulqiContextProps } from './interfacesv4';
+import { useScript } from '../hooks/useScript';
 
 export const CulqiContext = createContext<CulqiContextProps>({
   culqiLoaded: false,
 });
 
-export const baseCulqiUrl = "https://checkout.culqi.com";
+export const baseCulqiUrl = 'https://checkout.culqi.com';
 const culqiUrl = `${baseCulqiUrl}/js/v4`;
 
 interface CulqiProviderProps {
@@ -18,28 +19,61 @@ export const CulqiProvider = ({
   children,
 }: CulqiProviderProps): JSX.Element => {
   const [culqiLoaded, setCulqiLoaded] = useState(false);
+  const status = useScript(culqiUrl);
 
+  // Validate publicKey on mount and when it changes
   useEffect(() => {
-    if (!publicKey) throw new Error("Please pass along a publicKey prop.");
+    if (!publicKey || typeof publicKey !== 'string') {
+      throw new Error(
+        'CulqiProvider: publicKey is required and must be a valid string.'
+      );
+    }
+
+    if (!publicKey.startsWith('pk_')) {
+      console.warn(
+        "CulqiProvider: publicKey should start with 'pk_' for public keys."
+      );
+    }
   }, [publicKey]);
 
   useEffect(() => {
-    if (!publicKey) return;
-    const script = document.createElement("script");
-    script.src = culqiUrl;
-    script.async = true;
+    let interval: NodeJS.Timeout;
+    let timeout: NodeJS.Timeout;
 
-    script.onload = () => {
-      window.Culqi.publicKey = publicKey;
-      setCulqiLoaded(true);
-    };
+    if (status === 'ready') {
+      if (window.Culqi) {
+        window.Culqi.publicKey = publicKey;
+        setCulqiLoaded(true);
+      } else {
+        // Retry if window.Culqi is not immediately available
+        interval = setInterval(() => {
+          if (window.Culqi) {
+            window.Culqi.publicKey = publicKey;
+            setCulqiLoaded(true);
+            clearInterval(interval);
+          }
+        }, 100);
 
-    document.body.appendChild(script);
+        // Safety timeout to stop checking after 3 seconds
+        timeout = setTimeout(() => {
+          clearInterval(interval);
+          if (!window.Culqi) {
+            console.error(
+              'CulqiProvider: Culqi object not found after script load timeout'
+            );
+          }
+        }, 3000);
+      }
+    } else if (status === 'error') {
+      setCulqiLoaded(false);
+      console.error('CulqiProvider: Failed to load Culqi script');
+    }
 
     return () => {
-      document.body.removeChild(script);
+      if (interval) clearInterval(interval);
+      if (timeout) clearTimeout(timeout);
     };
-  }, [publicKey]);
+  }, [status, publicKey]);
 
   return (
     <CulqiContext.Provider value={{ culqiLoaded }}>

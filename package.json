@@ -11,31 +11,39 @@
     "type": "git",
     "url": "https://github.com/hebertdev/react-culqi-next"
   },
-  "homepage":"https://react-culqi.hebertdev.net/",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "homepage": "https://react-culqi-next.hebertdev.com/",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "engines": {
-    "node": ">=10"
+    "node": ">=16"
   },
   "scripts": {
-    "start": "tsdx watch",
-    "build": "tsdx build",
-    "test": "tsdx test --passWithNoTests",
-    "lint": "tsdx lint",
-    "prepare": "tsdx build",
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "test": "jest --passWithNoTests",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix",
+    "typecheck": "tsc --noEmit",
+    "prepare": "npm run build",
     "size": "size-limit",
-    "analyze": "size-limit --why"
+    "analyze": "size-limit --why",
+    "clean": "rimraf dist"
   },
   "peerDependencies": {
     "react": ">=16"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "tsdx lint"
-    }
   },
   "prettier": {
     "printWidth": 80,
@@ -43,27 +51,36 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "module": "dist/react-culqi-next.esm.js",
   "size-limit": [
     {
-      "path": "dist/react-culqi-next.cjs.production.min.js",
+      "path": "dist/index.js",
       "limit": "10 KB"
     },
     {
-      "path": "dist/react-culqi-next.esm.js",
+      "path": "dist/index.cjs",
       "limit": "10 KB"
     }
   ],
   "devDependencies": {
-    "@size-limit/preset-small-lib": "^8.2.4",
+    "@eslint/js": "^9.0.0",
+    "@size-limit/preset-small-lib": "^11.2.0",
+    "@testing-library/jest-dom": "^6.1.0",
+    "@types/jest": "^29.5.0",
     "@types/react": "^18.2.12",
     "@types/react-dom": "^18.2.5",
-    "husky": "^8.0.3",
+    "@typescript-eslint/eslint-plugin": "^8.57.0",
+    "@typescript-eslint/parser": "^8.57.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.33.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "jest": "^29.5.0",
+    "jest-environment-jsdom": "^30.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "rimraf": "^5.0.0",
     "size-limit": "^8.2.4",
-    "tsdx": "^0.14.1",
-    "tslib": "^2.5.3",
-    "typescript": "^3.9.10"
+    "ts-jest": "^29.1.0",
+    "tsup": "^8.5.0",
+    "typescript": "^5.1.0"
   }
 }

@@ -16,9 +16,10 @@ export interface SettingsV4 {
   title: string;
   currency: Currency;
   amount: number;
+  order?: string;
   options?: Partial<Options>;
-  xculqirsaid?:String;
-  rsapublickey?:String;
+  xculqirsaid?: String;
+  rsapublickey?: String;
 }
 
 export interface Options {
@@ -31,6 +32,10 @@ export interface Options {
 export interface PaymentMethods {
   tarjeta: boolean;
   yape: boolean;
+  bancaMovil?: boolean;
+  agente?: boolean;
+  billetera?: boolean;
+  cuotealo?: boolean;
 }
 
 export interface Style {
@@ -96,4 +101,11 @@ export interface Issuer {
 
 export interface Metadata {
   installments: string;
+}
+
+// Tipo genérico para órdenes emitidas por el Checkout Custom
+export interface OrderV4 {
+  object: string; // "order"
+  id: string;
+  [key: string]: any;
 }
