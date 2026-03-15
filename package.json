@@ -1,7 +1,7 @@
 {
   "name": "react-culqi-next",
   "description": "A React library for integration with the Culqi payment processor, compatible with Next.js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "contributors": [
     "Hebert Villafuerte (https://github.com/hebertdev/)"

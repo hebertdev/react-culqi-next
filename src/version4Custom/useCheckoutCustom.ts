@@ -81,6 +81,18 @@ export const useCheckoutCustom = ({
     }
   }, []); // Sin dependencias: usa refs para acceder a los callbacks del consumidor
 
+  // ── Callback de cierre del checkout ──────────────────────────────────────
+  // Culqi llama a instance.closeCheckout() cuando el usuario cierra el modal
+  // manualmente (botón X). Este es un setter distinto a instance.culqi.
+  // Sin este callback, onClose NUNCA se dispara al cerrar manualmente.
+  const handleCloseAction = useCallback(() => {
+    try {
+      onCloseRef.current?.();
+    } catch (e) {
+      console.error('useCheckoutCustom: Error en callback closeCheckout:', e);
+    }
+  }, []); // Sin dependencias: usa ref para acceder al callback del consumidor
+
   // ── Abrir el checkout ─────────────────────────────────────────────────────
   const openCulqiCustom = useCallback(() => {
     if (typeof window === 'undefined') {
@@ -120,8 +132,13 @@ export const useCheckoutCustom = ({
         config
       );
 
-      // Asignamos el callback oficial ANTES de abrir
+      // Asignamos el callback de token/orden/error (mecanismo oficial)
       instance.culqi = handleCulqiAction;
+
+      // Asignamos el callback de cierre manual del modal.
+      // La API de Checkout Custom usa `closeCheckout` (setter separado)
+      // que se dispara cuando el usuario cierra el modal con el botón X.
+      instance.closeCheckout = handleCloseAction;
 
       // Guardamos la instancia en el ref
       instanceRef.current = instance;
@@ -155,6 +172,7 @@ export const useCheckoutCustom = ({
     options,
     appearance,
     handleCulqiAction,
+    handleCloseAction,
   ]);
 
   // ── Cerrar el checkout programáticamente ─────────────────────────────────

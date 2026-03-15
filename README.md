@@ -1,75 +1,33 @@
 # REACT-CULQI-NEXT
 
-A React library for integration with the Culqi payment processor, compatible with Next.js.
+A React library for integrating the Culqi payment processor, compatible with Next.js.
 
-## Installation
-
-```bash
-npm install react-culqi-next
-```
-
-## Development
-
-This project uses modern tooling for better development experience:
-
-- **Build System**: TSUP (fast TypeScript bundler)
-- **Testing**: Jest with React Testing Library
-- **Linting**: ESLint with TypeScript and React rules
-- **Type Checking**: TypeScript 5.x
-
-### Scripts
-
-```bash
-# Development (watch mode)
-npm run dev
-
-# Build for production
-npm run build
-
-# Run tests
-npm run test
-
-# Lint code
-npm run lint
-
-# Fix linting issues
-npm run lint:fix
-
-# Type checking
-npm run typecheck
-
-# Clean build directory
-npm run clean
-```
+---
 
 ## Usage
 
 ### Culqi Checkout Custom (Recommended)
 
-This is the newer integration method which offers more customization and better control.
+The newer integration method — more customizable and with better control over all payment events, including `onClose`.
 
 ```tsx
-import { useState } from 'react';
 import { CulqiProviderCustom, useCheckoutCustom } from 'react-culqi-next';
 
 const MyApp = () => {
   return (
-    <CulqiProviderCustom publicKey="pk_test_4YrVwTo....your_public_key">
+    <CulqiProviderCustom publicKey="pk_test_your_public_key">
       <MyButton />
     </CulqiProviderCustom>
   );
 };
 
 const MyButton = () => {
-  const [amount, setAmount] = useState(10000); // Amount in cents (S/ 100.00)
-
   const { openCulqiCustom, token, error } = useCheckoutCustom({
     settings: {
       title: 'White T-shirt',
       currency: 'PEN',
-      amount: amount,
-      // Optional: order ID for other payment methods (Yape, Cuotéalo, etc.)
-      // order: 'ord_live_0CjjdWhFpEAZlxlz',
+      amount: 10000, // Amount in cents (S/ 100.00)
+      // order: 'ord_live_xxxx', // Required for Yape, PagoEfectivo, Cuotéalo
     },
     options: {
       lang: 'auto',
@@ -78,56 +36,90 @@ const MyButton = () => {
         tarjeta: true,
         yape: true,
       },
-      // appearance customization
-      // appearance: { ... }
     },
     onClose: () => {
-      console.log('Checkout closed');
+      console.log('Checkout closed by user');
     },
     onToken: (token) => {
       console.log('Token created:', token);
+      // Send token.id to your backend
     },
     onError: (error) => {
-      console.error('Error:', error);
+      console.error('Error:', error.user_message);
     },
   });
 
   return (
     <>
-      <button onClick={openCulqiCustom}>Pay with Custom Checkout</button>
+      <button onClick={openCulqiCustom}>Pay now</button>
       {error && <p style={{ color: 'red' }}>{error.user_message}</p>}
     </>
   );
 };
 ```
 
+#### With appearance customization
+
+```tsx
+const { openCulqiCustom } = useCheckoutCustom({
+  settings: { title: 'My Store', currency: 'PEN', amount: 5000 },
+  options: {
+    lang: 'auto',
+    installments: true,
+    paymentMethods: { tarjeta: true, yape: true },
+  },
+  appearance: {
+    theme: 'default',
+    menuType: 'sidebar',
+    hiddenCulqiLogo: false,
+    variables: {
+      colorBackground: '#0A2540',
+      colorPrimary: '#EFC078',
+      colorText: 'white',
+      borderRadius: '8px',
+    },
+  },
+  onToken: (token) => console.log(token),
+  onClose: () => console.log('closed'),
+});
+```
+
+#### With pre-filled client email
+
+```tsx
+const { openCulqiCustom } = useCheckoutCustom({
+  settings: { title: 'My Store', currency: 'PEN', amount: 5000 },
+  client: { email: 'customer@example.com' },
+  options: { lang: 'auto', installments: false },
+  onToken: (token) => console.log(token),
+});
+```
+
+---
+
 ### Version 4 (Legacy)
+
+> **Note**: Culqi has announced that Checkout v4 may be deprecated in the future. Consider using Checkout Custom for new integrations.
 
 ![Version 4](./culqiV4.png)
 
-> **Note**: Culqi has announced that Checkout v4 might be deprecated in the future. Consider using Checkout Custom for new integrations.
-
 ```tsx
-import { useState } from 'react';
 import { CulqiProvider, useCheckout } from 'react-culqi-next';
 
 const MyApp = () => {
   return (
-    <CulqiProvider publicKey="pk_test_4YrVwTo....your_public_key">
+    <CulqiProvider publicKey="pk_test_your_public_key">
       <MyButton />
     </CulqiProvider>
   );
 };
 
 const MyButton = () => {
-  const [amount, setAmount] = useState(10000);
-  const [title, setTitle] = useState('White T-shirt');
-
   const { openCulqi, token, error } = useCheckout({
     settings: {
-      title: title,
+      title: 'White T-shirt',
       currency: 'PEN',
-      amount: amount,
+      amount: 10000,
       options: {
         lang: 'auto',
         installments: false,
@@ -138,29 +130,27 @@ const MyButton = () => {
       },
     },
     onClose: () => {
-      console.log('Handle the closing of the modal');
+      console.log('Checkout closed by user');
     },
     onToken: (token) => {
-      console.log('Send your token to the backend', token);
+      console.log('Send token to backend:', token.id);
     },
     onError: (error) => {
-      console.log('handle the errors', error);
+      console.error('Error:', error);
     },
   });
 
   return (
-    <>
-      <button onClick={openCulqi}>Pay now</button>
-      {/* token y error disponibles para manejar estados */}
-    </>
+    <button onClick={openCulqi}>Pay now</button>
   );
 };
 ```
 
+---
+
 ## Contributing
 
-Pull requests are welcome. For major changes, please open an issue first
-to discuss what you would like to change.
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
 

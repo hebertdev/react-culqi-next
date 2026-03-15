@@ -234,6 +234,13 @@ export interface CulqiCheckoutInstance {
   close?: () => void;
   /** Callback que Culqi invoca cuando se genera un token, orden o error */
   culqi?: () => void;
+  /**
+   * Callback que Culqi invoca cuando el usuario cierra el modal manualmente
+   * (botón X, clic fuera del modal, etc.).
+   * Corresponde al setter `instance.closeCheckout` del script de Culqi.
+   * DIFERENTE a `instance.culqi`: este es exclusivo para el evento de cierre.
+   */
+  closeCheckout?: () => void;
   token?: import('../version4/interfacesv4').TokenV4;
   order?: import('../version4/interfacesv4').OrderV4;
   error?: import('../version4/interfacesv4').ErrorV4;
