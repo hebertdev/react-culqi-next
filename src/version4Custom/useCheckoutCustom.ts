@@ -125,7 +125,12 @@ export const useCheckoutCustom = ({
     }
 
     try {
-      const config = { settings, client, options, appearance };
+      const config = {
+        settings,
+        ...(client && { client }),
+        options: options || {},
+        appearance: appearance || {},
+      };
 
       const instance: CulqiCheckoutInstance = new (window as any).CulqiCheckout(
         publicKey,
